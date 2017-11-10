@@ -1,0 +1,35 @@
+{
+  "name": "defective-healer-telegram-bot",
+  "version": "0.0.0",
+  "description": "this is the telegraf telegram bot that answers with quotes of the defective healer",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slantz/defective-healer.git"
+  },
+  "keywords": [
+    "defective",
+    "healer",
+    "svyatoslav",
+    "victorovich",
+    "prank",
+    "telegram",
+    "bot",
+    "telegraf"
+  ],
+  "author": "https://github.com/slantz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slantz/defective-healer/issues"
+  },
+  "homepage": "https://github.com/slantz/defective-healer#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "telegraf": "^3.15.3"
+  }
+}
