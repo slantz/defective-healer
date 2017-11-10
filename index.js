@@ -78,10 +78,14 @@ bot.hears(/привет/i, (ctx) => {
     return ctx.reply(ctx.db.getHello());
 });
 
+bot.hears(/вычислим/i, (ctx) => {
+    ctx.reply('ну давай, вычисляй, вычисляй');
+    ctx.replyWithLocation(55.739659, 37.626763);
+});
+
 bot.command('/foo', (ctx) => ctx.reply('Hello World'));
 
 bot.on('text', (ctx) => {
-    console.log(ctx.message.from);
     const score = ctx.db.getLol(ctx.message.from.username)
     if (score) {
         return ctx.reply(`${ctx.message.from.username}: ${score}`)
