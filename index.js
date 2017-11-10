@@ -68,11 +68,20 @@ bot.start((ctx) => {
     return ctx.reply('ты почему сюда звонишь? я разрешал тебе сюда звонить?');
 })
 
+/**
+ * ORDER MATTERS:
+ * 1. first commands
+ * 2. regexps
+ * 3. then on all tet if nothing is found
+ */
 bot.hears(/привет/i, (ctx) => {
     return ctx.reply(ctx.db.getHello());
 });
 
+bot.command('/foo', (ctx) => ctx.reply('Hello World'));
+
 bot.on('text', (ctx) => {
+    console.log(ctx.message.from);
     const score = ctx.db.getLol(ctx.message.from.username)
     if (score) {
         return ctx.reply(`${ctx.message.from.username}: ${score}`)
@@ -82,3 +91,4 @@ bot.on('text', (ctx) => {
 bot.catch((err) => {
     console.log('Ooops', err)
 });
+
