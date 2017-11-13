@@ -1,49 +1,32 @@
-'use strict';
+"use strict";
 
-require('dotenv').config();
+require("dotenv").config();
 
-var fs = require('fs');
-var path = require('path');
-var join = require('path').join;
+const LOGGER = require("./logger").logger;
+const UTIL = require("./util");
+const CONSTANTS = require("./constants");
 
-var express = require('express');
-var app = express();
+const fs = require("fs");
+const path = require("path");
+const join = require("path").join;
 
-const Telegraf = require('telegraf');
+const express = require("express");
+const app = express();
+
+const Telegraf = require("telegraf");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const port = Number(process.env.PORT || 3001);
 
-
+const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
 
 // bot.startWebhook('/secret-path', null, 5000)
 
 // expressApp.use(bot.webhookCallback('/secret-path'))
 // bot.setWebhook('https://server.tld:8443/secret-path')
 
-// TODO move this to some authorization middleware module
-// var userTypes = {
-//     any: function(types) {
-//         return function(req, res, next) {
-//             if (req.isAuthenticated()) {
-//                 let admin = types.indexOf(Number(req.user.typeId)) !== -1;
-//                 res.json({
-//                     _id : req.user._id,
-//                     typeId : req.user.typeId,
-//                     provider : req.user.provider,
-//                     username : req.user.username,
-//                     name : req.user.name,
-//                     admin
-//                 });
-//             } else {
-//                 res.status(401).json({ error: Error('unauthorized') });
-//             }
-//         }
-//     }
-// };
 
 // app.get('/auth/user/me', userTypes.any(AdminUserIdTypes));
-
 
 // app.listen(port ,function() {
 //     console.log('server running at localhost:' + port + ', go refresh and see magic');
@@ -64,9 +47,9 @@ bot.context.db = {
 };
 
 bot.start((ctx) => {
-    console.log('started:', ctx.from.id);
-    return ctx.reply('ты почему сюда звонишь? я разрешал тебе сюда звонить?');
-})
+    console.log("started:", ctx.from.id);
+    return ctx.reply("ты почему сюда звонишь? я разрешал тебе сюда звонить?");
+});
 
 /**
  * ORDER MATTERS:
@@ -74,25 +57,27 @@ bot.start((ctx) => {
  * 2. regexps
  * 3. then on all tet if nothing is found
  */
+bot.command("/foo", (ctx) => ctx.reply("Hello World"));
+
 bot.hears(/привет/i, (ctx) => {
+    LOGGER.info('Hello again distributed logs');
     return ctx.reply(ctx.db.getHello());
 });
 
 bot.hears(/вычислим/i, (ctx) => {
-    ctx.reply('ну давай, вычисляй, вычисляй');
-    ctx.replyWithLocation(55.739659, 37.626763);
+    ctx.reply("ну давай, вычисляй, вычисляй");
+    ctx.replyWithLocation(CONSTANTS.SLAVIK_COORDS.lat, CONSTANTS.SLAVIK_COORDS.long);
 });
 
-bot.command('/foo', (ctx) => ctx.reply('Hello World'));
-
-bot.on('text', (ctx) => {
-    const score = ctx.db.getLol(ctx.message.from.username)
-    if (score) {
-        return ctx.reply(`${ctx.message.from.username}: ${score}`)
-    }
+bot.on("text", (ctx) => {
+    console.log(ctx.message);
+    // const score = ctx.db.getLol(ctx.message.from.username);
+    // if (score) {
+    //     return ctx.reply(`${ctx.message.from.username}: ${score}`)
+    // }
 });
 
 bot.catch((err) => {
-    console.log('Ooops', err)
+    console.log("Ooops", err)
 });
 
