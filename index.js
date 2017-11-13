@@ -72,10 +72,10 @@ bot.hears(/вычислим/i, (ctx) => {
 
 bot.on("text", (ctx) => {
     LOGGER.info("this is the message object [%s]", ctx.message);
-    const score = ctx.db.getLol(ctx.message.from.username);
-    if (score) {
-        return ctx.reply(`${ctx.message.from.username}: ${score}`)
-    }
+    // const score = ctx.db.getLol(ctx.message.from.username);
+    // if (score) {
+    //     return ctx.reply(`${ctx.message.from.username}: ${score}`)
+    // }
 });
 
 bot.catch((err) => {
