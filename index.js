@@ -2,18 +2,18 @@
 
 require("dotenv").config();
 
-const LOGGER = require("./logger").logger;
-const UTIL = require("./util");
-const CONSTANTS = require("./constants");
-
 const fs = require("fs");
 const path = require("path");
 const join = require("path").join;
-
 const express = require("express");
-const app = express();
-
 const Telegraf = require("telegraf");
+
+const LOGGER = require(join(__dirname, "logger")).logger;
+const UTIL = require(join(__dirname, "util"));
+const CONSTANTS = require(join(__dirname, "constants"));
+
+
+const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const port = Number(process.env.PORT || 3001);
@@ -60,21 +60,22 @@ bot.start((ctx) => {
 bot.command("/foo", (ctx) => ctx.reply("Hello World"));
 
 bot.hears(/привет/i, (ctx) => {
-    LOGGER.info('Hello again distributed logs');
+    LOGGER.info("Somebody has greeted Slavik");
     return ctx.reply(ctx.db.getHello());
 });
 
 bot.hears(/вычислим/i, (ctx) => {
+    LOGGER.info("Somebody has threatened to find Slavik");
     ctx.reply("ну давай, вычисляй, вычисляй");
     ctx.replyWithLocation(CONSTANTS.SLAVIK_COORDS.lat, CONSTANTS.SLAVIK_COORDS.long);
 });
 
 bot.on("text", (ctx) => {
-    console.log(ctx.message);
-    // const score = ctx.db.getLol(ctx.message.from.username);
-    // if (score) {
-    //     return ctx.reply(`${ctx.message.from.username}: ${score}`)
-    // }
+    LOGGER.info("this is the message object [%s]", ctx.message);
+    const score = ctx.db.getLol(ctx.message.from.username);
+    if (score) {
+        return ctx.reply(`${ctx.message.from.username}: ${score}`)
+    }
 });
 
 bot.catch((err) => {

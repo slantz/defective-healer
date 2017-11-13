@@ -1,4 +1,5 @@
 const winston = require("winston");
+const join = require("path").join;
 
 /**
  *   error: 0,
@@ -9,17 +10,16 @@ const winston = require("winston");
  *   silly: 5
  */
 const logger = winston.createLogger({
-    level: "verbose", // write to logs from debug level and more important
+    level: "info", // write to logs from debug level and more important
     format: winston.format.json(),
     transports: [
         //
         // - Write to all logs with level `info` and below to `combined.log`
         // - Write all logs error (and below) to `error.log`.
         //
-        new winston.transports.File({ filename: './logs/dh-error.log', level: 'error' }),
-        new winston.transports.File({ filename: './logs/dh-warn.log', level: 'warn' }),
-        new winston.transports.File({ filename: './logs/dh-info.log', level: 'info' }),
-        new winston.transports.File({ filename: './logs/dh-verbose.log', level: 'verbose' })
+        new winston.transports.File({ filename: join(__dirname, 'logs/dh-error.log'), level: 'error' }),
+        new winston.transports.File({ filename: join(__dirname, 'logs/dh-warn.log'), level: 'warn' }),
+        new winston.transports.File({ filename: join(__dirname, 'logs/dh-info.log'), level: 'info' })
     ]
 });
 
