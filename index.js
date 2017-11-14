@@ -72,10 +72,27 @@ bot.hears(/вычислим/i, (ctx) => {
 
 bot.on("text", (ctx) => {
     LOGGER.info("this is the message object [%s]", ctx.message);
+    console.log(ctx.message);
+    // console.log(ctx.message.entities[0].user);
     // const score = ctx.db.getLol(ctx.message.from.username);
     // if (score) {
     //     return ctx.reply(`${ctx.message.from.username}: ${score}`)
     // }
+});
+
+bot.on("voice", (ctx) => {
+    console.log("я вашей хуйни не понимаю");
+})
+
+bot.on("sticker", (ctx) => {
+    console.log("я вашей хуйни не понимаю");
+});
+
+bot.on("video", ctx => console.log(ctx.message));
+
+bot.hashtag('hashtag', (ctx) => {
+    console.log(ctx.message);
+    return ctx.reply(`${ctx.message.from.username}: ${score}`)
 });
 
 bot.catch((err) => {
