@@ -1,3 +1,36 @@
 {
-    "greet": "меня Святослав Викторович зовут"
+    "COMMANDS": {
+        "START": "ты почему сюда звонишь? я разрешал тебе сюда звонить?"
+    },
+    "COMMON": {
+        "GREET": {
+            "ALL_HELLO": "меня Святослав Викторович зовут"
+        }
+    },
+    "USER_SPECIFIC": {
+        "me": {
+            "FROM": {},
+            "MENTIONED": {}
+        },
+        "vt": {
+            "FROM": {},
+            "MENTIONED": {}
+        },
+        "al": {
+            "FROM": {},
+            "MENTIONED": {}
+        },
+        "ln": {
+            "FROM": {},
+            "MENTIONED": {}
+        },
+        "ar": {
+            "FROM": {},
+            "MENTIONED": {}
+        },
+        "nk": {
+            "FROM": {},
+            "MENTIONED": {}
+        }
+    }
 }

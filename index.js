@@ -12,6 +12,7 @@ const LOGGER = require(join(__dirname, "logger")).logger;
 const UTIL = require(join(__dirname, "util"));
 const CONSTANTS = require(join(__dirname, "constants"));
 
+const QUOTES = JSON.parse(fs.readFileSync(join(__dirname, "quotes.json")));
 
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -43,12 +44,12 @@ bot.context.db = {
 
         return "алина певитса @ гмейл ком";
     },
-    getHello: () => { return "Меня Святослав Викторович зовут."; }
+    getHello: () => { return QUOTES.COMMON.GREET.ALL_HELLO; }
 };
 
 bot.start((ctx) => {
     console.log("started:", ctx.from.id);
-    return ctx.reply("ты почему сюда звонишь? я разрешал тебе сюда звонить?");
+    return ctx.reply(QUOTES.COMMANDS.START);
 });
 
 /**
