@@ -7,10 +7,14 @@ function convertPeopleToTroll(PEOPLE_TO_TROLL) {
 
     return PEOPLE_TO_TROLL
         .split(",")
-        .reduce((prev, next) => prev.concat({
-            id: Number(getMatchedPerson(next)[1]),
-            name: getMatchedPerson(next)[2]
-        }), []) || [];
+        .reduce((prev, next) =>
+                Object.assign(prev, {
+                    [Number(getMatchedPerson(next)[1])]: {
+                        id : Number(getMatchedPerson(next)[1]),
+                        name : getMatchedPerson(next)[2]
+                    }
+                })
+        , {}) || {};
 }
 
 module.exports = {

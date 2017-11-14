@@ -74,6 +74,10 @@ bot.on("sticker", (ctx) => {
 
 bot.on("video", ctx => console.log(ctx.message));
 
+bot.mention('SvyatoslavVictorovichBot', (ctx) => {
+    console.log(111);
+});
+
 bot.hashtag('hashtag', (ctx) => {
     console.log(ctx.message);
     return ctx.reply(`${ctx.message.from.username}: ${score}`)

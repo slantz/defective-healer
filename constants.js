@@ -31,6 +31,7 @@ const BOT_EVENTS = {
 
 const MESSAGE_TYPES = {
     ENTITIES: {
+        BOT_ENTITIES_TYPE_MENTION: "mention",
         TEXT_MENTION: "text_mention"
     }
 };
