@@ -3,9 +3,7 @@
 require("dotenv").config();
 
 const fs = require("fs");
-const path = require("path");
 const join = require("path").join;
-const express = require("express");
 const Telegraf = require("telegraf");
 
 const LOGGER = require(join(__dirname, "logger")).logger;
@@ -14,24 +12,9 @@ const CONSTANTS = require(join(__dirname, "constants"));
 
 const QUOTES = JSON.parse(fs.readFileSync(join(__dirname, "quotes.json")));
 
-const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-const port = Number(process.env.PORT || 3001);
-
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
-
-// bot.startWebhook('/secret-path', null, 5000)
-
-// expressApp.use(bot.webhookCallback('/secret-path'))
-// bot.setWebhook('https://server.tld:8443/secret-path')
-
-
-// app.get('/auth/user/me', userTypes.any(AdminUserIdTypes));
-
-// app.listen(port ,function() {
-//     console.log('server running at localhost:' + port + ', go refresh and see magic');
-// });
 
 bot.startPolling();
 
@@ -99,4 +82,3 @@ bot.hashtag('hashtag', (ctx) => {
 bot.catch((err) => {
     console.log("Ooops", err)
 });
-
