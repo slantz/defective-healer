@@ -34,8 +34,8 @@ bot.context.db = {
 };
 
 bot.start((ctx) => {
-    console.log("started:", ctx.from.id);
-    return ctx.reply(QUOTES.COMMANDS.START);
+    LOGGER.warn("started: %d", ctx.from.id);
+    return ctx.reply(`${QUOTES.COMMANDS.START}\t\n\t\n${QUOTES.COMMANDS.HELP}`);
 });
 
 /**
@@ -81,6 +81,8 @@ bot.command("/skip", (ctx) => {
 
     return ctx.reply(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать ${amountOfMessages} ${textEnding}.`);
 });
+
+bot.command("/help", (ctx) => ctx.reply(QUOTES.COMMANDS.HELP));
 
 bot.hears(/привет/i, (ctx) => {
     LOGGER.info("Somebody has greeted Slavik");
