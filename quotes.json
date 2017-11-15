@@ -4,8 +4,14 @@
     },
     "COMMON": {
         "GREET": {
-            "ALL_HELLO": "меня Святослав Викторович зовут"
-        }
+            "INFORMAL": "здарова",
+            "ALL_HELLO": "меня Святослав Викторович зовут",
+            "HEAR_YOU": "да я слушаю Вас, алло",
+            "HEAR_YOU_HELLO": "да, я Вас слушаю алло",
+            "HONOUR": "с кем я имею честь? вы поняли мой вопрос?",
+            "INTRODUCE": "представьтесь, пожалуйста"
+        },
+        "DEFECTIVE_HEALING": "quotes.json.locked"
     },
     "USER_SPECIFIC": {
         "me": {

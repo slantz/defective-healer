@@ -5,16 +5,23 @@ function convertPeopleToTroll(PEOPLE_TO_TROLL) {
         return next.match(/(\d+)\[(\w+)\]/i);
     }
 
+    function assignPersonToHashMap(prev, next) {
+        let id = Number(getMatchedPerson(next)[1]);
+        let name = getMatchedPerson(next)[2];
+
+        return Object.assign(prev,
+            {
+                [id] :
+                    {
+                        id : id,
+                        name : name
+                    }
+            });
+    }
+
     return PEOPLE_TO_TROLL
         .split(",")
-        .reduce((prev, next) =>
-                Object.assign(prev, {
-                    [Number(getMatchedPerson(next)[1])]: {
-                        id : Number(getMatchedPerson(next)[1]),
-                        name : getMatchedPerson(next)[2]
-                    }
-                })
-        , {}) || {};
+        .reduce(assignPersonToHashMap, {}) || {};
 }
 
 module.exports = {
