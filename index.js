@@ -34,7 +34,7 @@ bot.context.db = {
 };
 
 bot.start((ctx) => {
-    LOGGER.warn("started: %d", ctx.from.id);
+    LOGGER.warn("started by user id [%d]", ctx.from.id);
     return ctx.reply(`${QUOTES.COMMANDS.START}\t\n\t\n${QUOTES.COMMANDS.HELP}`);
 });
 
@@ -96,7 +96,7 @@ bot.hears(/вычислим/i, (ctx) => {
 });
 
 bot.on("text", (ctx) => {
-    LOGGER.info("this is the message object [%s]", ctx.message);
+    LOGGER.info("message from [%d] and body", ctx.message.from.id, ctx.message);
 
     if (currentMessage < amountOfMessages) {
         return currentMessage++;

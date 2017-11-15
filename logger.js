@@ -11,7 +11,11 @@ const join = require("path").join;
  */
 const logger = winston.createLogger({
     level: "info", // write to logs from debug level and more important
-    format: winston.format.json(),
+    format: winston.format.combine(
+        winston.format.splat(),
+        winston.format.simple(),
+        winston.format.json()
+    ),
     transports: [
         //
         // - Write to all logs with level `info` and below to `combined.log`
