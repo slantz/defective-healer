@@ -2,7 +2,6 @@
 
 require("dotenv").config();
 
-const fs = require("fs");
 const join = require("path").join;
 const Telegraf = require("telegraf");
 
@@ -10,11 +9,15 @@ const LOGGER = require(join(__dirname, "logger")).logger;
 const UTIL = require(join(__dirname, "util"));
 const CONSTANTS = require(join(__dirname, "constants"));
 
-const QUOTES = JSON.parse(fs.readFileSync(join(__dirname, "quotes.json")));
+const QUOTES = UTIL.getFullUncutQuotes("quotes.json");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
+
+let silenceForAmountOfMessages = 3;
+let amountOfMessages = UTIL.randomIntFromInterval(0,silenceForAmountOfMessages);
+let currentMessage = 0;
 
 bot.startPolling();
 
@@ -43,6 +46,42 @@ bot.start((ctx) => {
  */
 bot.command("/foo", (ctx) => ctx.reply("Hello World"));
 
+bot.command("/skip", (ctx) => {
+    let matchedSkipMessages = UTIL.getSkipMessagesMatch(ctx.message.text);
+
+    if (matchedSkipMessages === null) {
+        return ctx.reply(
+            "Набирай-ка ты правильно количество сообщений, " +
+            "сколько от 0 до 9 пропускать, " +
+            "например так '/skip 4'");
+    }
+
+    let amountOfMessages = Number(matchedSkipMessages[1]);
+    let textEnding = "сообщений";
+
+    switch (amountOfMessages) {
+        case 1:
+            textEnding = "сообщение";
+            break;
+        case 2:
+        case 3:
+        case 4:
+            textEnding = "сообщения";
+            break;
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+            textEnding = "сообщений";
+            break;
+    }
+
+    silenceForAmountOfMessages = amountOfMessages;
+
+    return ctx.reply(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать ${amountOfMessages} ${textEnding}.`);
+});
+
 bot.hears(/привет/i, (ctx) => {
     LOGGER.info("Somebody has greeted Slavik");
     return ctx.reply(ctx.db.getHello());
@@ -56,7 +95,20 @@ bot.hears(/вычислим/i, (ctx) => {
 
 bot.on("text", (ctx) => {
     LOGGER.info("this is the message object [%s]", ctx.message);
-    console.log(ctx.message);
+
+    if (currentMessage < amountOfMessages) {
+        return currentMessage++;
+    }
+
+    amountOfMessages = UTIL.randomIntFromInterval(0, silenceForAmountOfMessages);
+    currentMessage = 0;
+
+
+    let randomPart = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING.length - 1);
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING[randomPart].length - 1);
+
+    return ctx.reply(QUOTES.COMMON.DEFECTIVE_HEALING[randomPart][randomQuote]);
+
     // console.log(ctx.message.entities[0].user);
     // const score = ctx.db.getLol(ctx.message.from.username);
     // if (score) {
