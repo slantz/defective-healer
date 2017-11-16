@@ -99,7 +99,7 @@ bot.hears(/вычислим/i, (ctx) => {
     ctx.replyWithLocation(CONSTANTS.SLAVIK_COORDS.lat, CONSTANTS.SLAVIK_COORDS.long);
 });
 
-bot.hears(/(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв)/i,
+bot.hears(/(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв|врач|доктор)/i,
     (ctx) => {
         LOGGER.info("Somebody has mentioned Slavik");
 
