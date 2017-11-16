@@ -22,13 +22,17 @@ let currentMessage = 0;
 bot.startPolling();
 
 bot.context.db = {
-    getScores: () => { return 42 },
-    getLol: (username) => {
-        if (username !== "kblnsk") {
+    getAppeal: (id) => {
+        let personToTroll = PEOPLE_TO_TROLL[id];
+
+        if (!personToTroll) {
             return null;
         }
 
-        return "алина певитса @ гмейл ком";
+        let appealQuotesForName = QUOTES.USER_SPECIFIC[PEOPLE_TO_TROLL[id].name].TO;
+        let randomQuote = UTIL.randomIntFromInterval(0, appealQuotesForName.length - 1);
+
+        return appealQuotesForName[randomQuote];
     },
     getHello: () => { return QUOTES.COMMON.GREET.ALL_HELLO; }
 };
@@ -95,6 +99,17 @@ bot.hears(/вычислим/i, (ctx) => {
     ctx.replyWithLocation(CONSTANTS.SLAVIK_COORDS.lat, CONSTANTS.SLAVIK_COORDS.long);
 });
 
+bot.hears(/(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective)/i,
+    (ctx) => {
+        LOGGER.info("Somebody has mentioned Slavik");
+
+        const appealReply = ctx.db.getAppeal(ctx.message.from.id);
+
+        if (appealReply) {
+            return ctx.reply(`${ctx.message.from.first_name}, ${appealReply}`);
+        }
+});
+
 bot.on("text", (ctx) => {
     LOGGER.info("message from [%d] and body", ctx.message.from.id, ctx.message);
 
@@ -110,12 +125,6 @@ bot.on("text", (ctx) => {
     let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING[randomPart].length - 1);
 
     return ctx.reply(QUOTES.COMMON.DEFECTIVE_HEALING[randomPart][randomQuote]);
-
-    // console.log(ctx.message.entities[0].user);
-    // const score = ctx.db.getLol(ctx.message.from.username);
-    // if (score) {
-    //     return ctx.reply(`${ctx.message.from.username}: ${score}`)
-    // }
 });
 
 bot.on("voice", (ctx) => {
