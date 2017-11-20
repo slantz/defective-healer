@@ -116,7 +116,7 @@ bot.command("/setmood", (ctx) => {
 
     currentMood = newMood.toUpperCase();
 
-    return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(currentMood)}`);
+    return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(currentMood)}, всё пока, не звони сюда больше.`);
 });
 
 bot.hears(/привет/i, (ctx) => {

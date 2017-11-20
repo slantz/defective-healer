@@ -91,7 +91,7 @@ function getCurrentMoodDescription(currentMood) {
             break;
     }
 
-    return description + ", всё пока, не звони сюда больше";
+    return description;
 }
 
 module.exports = {
