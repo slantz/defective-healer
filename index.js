@@ -30,7 +30,11 @@ bot.context.db = {
         }
 
         let appealQuotesForName = QUOTES.USER_SPECIFIC[PEOPLE_TO_TROLL[id].name].TO;
-        let randomQuote = UTIL.randomIntFromInterval(0, appealQuotesForName.length - 1);
+        let defectiveQuotes = QUOTES.COMMON.DEFECTIVE_HEALING[QUOTES.COMMON.DEFECTIVE_HEALING.length - 1];
+
+        let allQuotes = appealQuotesForName.concat(defectiveQuotes);
+
+        let randomQuote = UTIL.randomIntFromInterval(0, allQuotes.length - 1);
 
         return appealQuotesForName[randomQuote];
     },
