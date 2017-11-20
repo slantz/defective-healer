@@ -37,7 +37,7 @@ bot.context.db = {
 
         let randomQuote = UTIL.randomIntFromInterval(0, allQuotes.length - 1);
 
-        return appealQuotesForName[randomQuote];
+        return allQuotes[randomQuote];
     },
     getHello: () => { return QUOTES.COMMON.GREET.ALL_HELLO; }
 };
