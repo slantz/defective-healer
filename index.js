@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const join = require("path").join;
 const Telegraf = require("telegraf");
+const session = require("telegraf/session");
 
 const LOGGER = require(join(__dirname, "logger")).logger;
 const UTIL = require(join(__dirname, "util"));
@@ -19,6 +20,8 @@ let silenceForAmountOfMessages = 3;
 let amountOfMessages = UTIL.randomIntFromInterval(0,silenceForAmountOfMessages);
 let currentMessage = 0;
 let currentMood = "ANY";
+
+bot.use(session());
 
 bot.startPolling();
 
