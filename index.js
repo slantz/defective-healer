@@ -18,6 +18,7 @@ const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
 let silenceForAmountOfMessages = 3;
 let amountOfMessages = UTIL.randomIntFromInterval(0,silenceForAmountOfMessages);
 let currentMessage = 0;
+let currentMood = "ANY";
 
 bot.startPolling();
 
@@ -92,6 +93,32 @@ bot.command("/skip", (ctx) => {
 
 bot.command("/help", (ctx) => ctx.reply(QUOTES.COMMANDS.HELP));
 
+bot.command("/setmood", (ctx) => {
+    let matchedMessages = UTIL.getMood(ctx.message.text);
+
+    if (matchedMessages === null) {
+        return ctx.reply(
+            "Ну, ты, походу, проверяешь меня, хер тебе, " +
+            UTIL.getCurrentMoodDescription(currentMood) +
+            ", " +
+            "если хочешь пообщаться, звони мне с:\t\n" +
+            "/setmood happy       счастливый\t\n" +
+            "/setmood angry       злой\t\n" +
+            "/setmood benevolent  великодушный\t\n" +
+            "/setmood pensive     задумчивый\t\n" +
+            "/setmood excited     возбуждённый\t\n" +
+            "/setmood rude        грубый\t\n" +
+            "/setmood polite      вежливый\t\n" +
+            "/setmood funny       весёлый");
+    }
+
+    let newMood = matchedMessages[1];
+
+    currentMood = newMood.toUpperCase();
+
+    return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(currentMood)}`);
+});
+
 bot.hears(/привет/i, (ctx) => {
     LOGGER.info("Somebody has greeted Slavik");
     return ctx.reply(ctx.db.getHello());
@@ -121,19 +148,28 @@ bot.on("text", (ctx) => {
         return currentMessage++;
     }
 
-    amountOfMessages = UTIL.randomIntFromInterval(0, silenceForAmountOfMessages);
+    amountOfMessages = UTIL.randomIntFromInterval(
+        silenceForAmountOfMessages > 3
+            ? silenceForAmountOfMessages - 3
+            : 0,
+        silenceForAmountOfMessages);
     currentMessage = 0;
 
+    // no quotes are selected for mood behavior yet
+    if (currentMood === "ANY" || QUOTES.MOODS[currentMood].length === 0) {
+        let randomPart = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING.length - 1);
+        let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING[randomPart].length - 1);
 
-    let randomPart = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING.length - 1);
-    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING[randomPart].length - 1);
+        return ctx.reply(QUOTES.COMMON.DEFECTIVE_HEALING[randomPart][randomQuote]);
+    }
 
-    return ctx.reply(QUOTES.COMMON.DEFECTIVE_HEALING[randomPart][randomQuote]);
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.MOODS[currentMood].length - 1);
+    return ctx.reply(QUOTES.MOODS[currentMood][randomQuote]);
 });
 
 bot.on("voice", (ctx) => {
-    console.log("я вашей хуйни не понимаю");
-})
+    return ctx.reply("я вашей хуйни не понимаю");
+});
 
 bot.on("sticker", (ctx) => {
     console.log("я вашей хуйни не понимаю");

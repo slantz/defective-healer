@@ -1,7 +1,7 @@
 {
     "COMMANDS": {
         "START": "ты почему сюда звонишь? я разрешал тебе сюда звонить?",
-        "HELP": "/skip `X` - помолчать о жизни `Х` сообщений\t\n/help - инфа про команды"
+        "HELP": "/skip `X` - помолчать о жизни `Х` сообщений\t\n\n/help - инфа про команды\t\n\n/setmood happy          - счастливый\t\n/setmood angry           - злой\t\n/setmood benevolent  - великодушный\t\n/setmood pensive        - задумчивый\t\n/setmood excited         - возбуждённый\t\n/setmood rude              - грубый\t\n/setmood polite            - вежливый\t\n/setmood funny            - весёлый"
     },
     "COMMON": {
         "GREET": {
@@ -14,33 +14,32 @@
         },
         "DEFECTIVE_HEALING": "quotes.json.locked"
     },
-    "HAPPY": [
+    "MOODS": {
+        "HAPPY": [
 
-    ],
-    "ANGRY": [
+        ],
+        "ANGRY": [
 
-    ],
-    "GRACEFUL": [
+        ],
+        "BENEVOLENT": [
 
-    ],
-    "QUESTIONING": [
+        ],
+        "PENSIVE": [
 
-    ],
-    "EXCLAMATION": [
+        ],
+        "EXCITED": [
 
-    ],
-    "THOUGHTFUL": [
+        ],
+        "RUDE": [
 
-    ],
-    "RUDE": [
+        ],
+        "POLITE": [
 
-    ],
-    "POLITE": [
-
-    ],
-    "FUNNY": [
-
-    ],
+        ],
+        "FUNNY": [
+            "я приеду с выпивкой, закуской"
+        ]
+    },
     "USER_SPECIFIC": {
         "me": {
             "FROM": {},

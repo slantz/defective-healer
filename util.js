@@ -49,9 +49,56 @@ function getSkipMessagesMatch(text) {
     return text.match(regexp);
 }
 
+function getMood(text) {
+    if (!text || typeof text !== "string") {
+        return null;
+    }
+
+    let regexp = /^\/setmood\s+(happy|angry|benevolent|pensive|excited|rude|polite|funny)$/i;
+    return text.match(regexp);
+}
+
+function getCurrentMoodDescription(currentMood) {
+    let description = "";
+
+    switch (currentMood) {
+        case "ANY":
+            description = "у меня любое настроение";
+            break;
+        case "HAPPY":
+            description = "я счастливый сейчас";
+            break;
+        case "ANGRY":
+            description = "я злой, блять";
+            break;
+        case "BENEVOLENT":
+            description = "я сегодня великодушный";
+            break;
+        case "PENSIVE":
+            description = "я задумчивый";
+            break;
+        case "EXCITED":
+            description = "я возбуждён";
+            break;
+        case "RUDE":
+            description = "нахуй пошёл";
+            break;
+        case "POLITE":
+            description = "я вежливый";
+            break;
+        case "FUNNY":
+            description = "я весёлый";
+            break;
+    }
+
+    return description + ", всё пока, не звони сюда больше";
+}
+
 module.exports = {
     convertPeopleToTroll,
     getFullUncutQuotes,
     randomIntFromInterval,
-    getSkipMessagesMatch
+    getSkipMessagesMatch,
+    getMood,
+    getCurrentMoodDescription
 };
