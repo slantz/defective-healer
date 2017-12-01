@@ -54,7 +54,7 @@ function getMood(text) {
         return null;
     }
 
-    let regexp = /^\/setmood\s+(happy|angry|benevolent|pensive|excited|rude|polite|funny)$/i;
+    let regexp = /^\/setmood\s+(any|happy|angry|benevolent|pensive|excited|rude|polite|funny)$/i;
     return text.match(regexp);
 }
 

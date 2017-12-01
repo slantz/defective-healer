@@ -110,6 +110,7 @@ bot.command("/setmood", (ctx) => {
             UTIL.getCurrentMoodDescription(currentMood) +
             ", " +
             "если хочешь пообщаться, звони мне с:\t\n" +
+            "/setmood any         вездесущий\t\n" +
             "/setmood happy       счастливый\t\n" +
             "/setmood angry       злой\t\n" +
             "/setmood benevolent  великодушный\t\n" +
@@ -180,7 +181,13 @@ bot.on("voice", (ctx) => {
 });
 
 bot.on("sticker", (ctx) => {
-    console.log("я вашей хуйни не понимаю");
+    LOGGER.info("message from [%d] with sticker file_id [%s] and body",
+                ctx.message.from.id,
+                ctx.message.sticker.file_id,
+                ctx.message);
+    if (UTIL.randomIntFromInterval(0, 5) === 1) {
+        ctx.replyWithSticker(CONSTANTS.STICKER_IDS.EXTINGUISHER);
+    }
 });
 
 bot.on("video", ctx => console.log(ctx.message));

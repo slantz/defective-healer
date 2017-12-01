@@ -39,12 +39,17 @@ const MESSAGE_TYPES = {
 const REGEXPS = {
     HI: /привет|даров|йо|восапп|как\sоно|как\sдел|здравствуйт|кто\sздес|что\sделае/i,
     FIND: /вычислим/i,
-    APPEAL: /(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв|врач|доктор)/i,
+    APPEAL: /(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв|врач|доктор)/i
+};
+
+const STICKER_IDS = {
+    EXTINGUISHER: 'CAADAgADfwAD8MPADvKH6ih2RMD9Ag'
 };
 
 module.exports = {
     SLAVIK_COORDS,
     BOT_EVENTS,
     MESSAGE_TYPES,
-    REGEXPS
+    REGEXPS,
+    STICKER_IDS
 };
