@@ -122,18 +122,18 @@ bot.command("/setmood", (ctx) => {
     return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(currentMood)}, всё пока, не звони сюда больше.`);
 });
 
-bot.hears(/привет/i, (ctx) => {
+bot.hears(CONSTANTS.REGEXPS.HI, (ctx) => {
     LOGGER.info("Somebody has greeted Slavik");
     return ctx.reply(ctx.db.getHello());
 });
 
-bot.hears(/вычислим/i, (ctx) => {
+bot.hears(CONSTANTS.REGEXPS.FIND, (ctx) => {
     LOGGER.info("Somebody has threatened to find Slavik");
     ctx.reply("ну давай, вычисляй, вычисляй");
     ctx.replyWithLocation(CONSTANTS.SLAVIK_COORDS.lat, CONSTANTS.SLAVIK_COORDS.long);
 });
 
-bot.hears(/(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв|врач|доктор)/i,
+bot.hears(CONSTANTS.REGEXPS.APPEAL,
     (ctx) => {
         LOGGER.info("Somebody has mentioned Slavik");
 

@@ -36,8 +36,15 @@ const MESSAGE_TYPES = {
     }
 };
 
+const REGEXPS = {
+    HI: /привет|даров|йо|восапп|как\sоно|как\sдел|здравствуйт|кто\sздес|что\sделае/i,
+    FIND: /вычислим/i,
+    APPEAL: /(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв|врач|доктор)/i,
+};
+
 module.exports = {
     SLAVIK_COORDS,
     BOT_EVENTS,
-    MESSAGE_TYPES
+    MESSAGE_TYPES,
+    REGEXPS
 };
