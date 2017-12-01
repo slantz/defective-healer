@@ -202,5 +202,5 @@ bot.hashtag('hashtag', (ctx) => {
 });
 
 bot.catch((err) => {
-    console.log("Ooops", err)
+    LOGGER.error("Error occured:", err);
 });
