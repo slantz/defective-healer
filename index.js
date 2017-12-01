@@ -42,7 +42,12 @@ bot.context.db = {
 
         return allQuotes[randomQuote];
     },
-    getHello: () => { return QUOTES.COMMON.GREET.ALL_HELLO; }
+    getHello: () => {
+        let greetQuotes = Object.keys(QUOTES.COMMON.GREET);
+        let randomQuote = UTIL.randomIntFromInterval(0, greetQuotes.length - 1);
+
+        return QUOTES.COMMON.GREET[greetQuotes[randomQuote]];
+    }
 };
 
 bot.start((ctx) => {
