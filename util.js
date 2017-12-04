@@ -30,8 +30,8 @@ function convertPeopleToTroll(PEOPLE_TO_TROLL) {
 function getFullUncutQuotes(quotesFileName) {
     let QUOTES_CUT = JSON.parse(fs.readFileSync(join(__dirname, quotesFileName)));
 
-    QUOTES_CUT.COMMON.DEFECTIVE_HEALING =
-        JSON.parse(fs.readFileSync(join(__dirname, QUOTES_CUT.COMMON.DEFECTIVE_HEALING)));
+    QUOTES_CUT.GENERAL.DEFECTIVE_HEALING =
+        JSON.parse(fs.readFileSync(join(__dirname, QUOTES_CUT.GENERAL.DEFECTIVE_HEALING)));
 
     return Object.assign({}, QUOTES_CUT);
 }

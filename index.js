@@ -34,19 +34,28 @@ bot.context.db = {
         }
 
         let appealQuotesForName = QUOTES.USER_SPECIFIC[PEOPLE_TO_TROLL[id].name].TO;
-        let defectiveQuotes = QUOTES.COMMON.DEFECTIVE_HEALING[QUOTES.COMMON.DEFECTIVE_HEALING.length - 1];
+        let defectiveQuotes = QUOTES.GENERAL.DEFECTIVE_HEALING[QUOTES.GENERAL.DEFECTIVE_HEALING.length - 1];
+        let singingQuotes = QUOTES.GENERAL.SINGING[QUOTES.GENERAL.SINGING.length - 1];
 
-        let allQuotes = appealQuotesForName.concat(defectiveQuotes);
+
+        let allQuotes;
+        switch (PEOPLE_TO_TROLL[id].name) {
+            case "al":
+                allQuotes = appealQuotesForName.concat(singingQuotes);
+                break;
+            default:
+                allQuotes = appealQuotesForName.concat(defectiveQuotes);
+        }
 
         let randomQuote = UTIL.randomIntFromInterval(0, allQuotes.length - 1);
 
         return allQuotes[randomQuote];
     },
     getHello: () => {
-        let greetQuotes = Object.keys(QUOTES.COMMON.GREET);
+        let greetQuotes = Object.keys(QUOTES.GENERAL.GREET);
         let randomQuote = UTIL.randomIntFromInterval(0, greetQuotes.length - 1);
 
-        return QUOTES.COMMON.GREET[greetQuotes[randomQuote]];
+        return QUOTES.GENERAL.GREET[greetQuotes[randomQuote]];
     }
 };
 
@@ -59,7 +68,8 @@ bot.start((ctx) => {
  * ORDER MATTERS:
  * 1. first commands
  * 2. regexps
- * 3. then on all tet if nothing is found
+ * 3. hashtags
+ * 4. then on all tet if nothing is found
  */
 bot.command("/foo", (ctx) => ctx.reply("Hello World"));
 
@@ -150,6 +160,47 @@ bot.hears(CONSTANTS.REGEXPS.APPEAL,
         }
 });
 
+bot.hears(CONSTANTS.REGEXPS.RICH_BITCH, (ctx) => {
+    LOGGER.info("Someone has started real money talk");
+
+    if (UTIL.randomIntFromInterval(0, 1) === 1) {
+        return ctx.replyWithSticker(CONSTANTS.STICKER_IDS.BUSINESS_LESSON);
+    }
+
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.REAL_MONEY_TALK.length - 1);
+    return ctx.reply(QUOTES.GENERAL.REAL_MONEY_TALK[randomQuote]);
+});
+
+bot.hears(CONSTANTS.REGEXPS.SINGING, (ctx) => {
+    LOGGER.info("Someone wants to sing");
+
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.SINGING.length - 1);
+    return ctx.reply(QUOTES.GENERAL.SINGING[randomQuote]);
+});
+
+bot.hears(CONSTANTS.REGEXPS.TEA_TIME, (ctx) => {
+    LOGGER.info("Someone wants to have a break");
+
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.TEA_TIME.length - 1);
+    return ctx.reply(QUOTES.GENERAL.TEA_TIME[randomQuote]);
+});
+
+bot.hears(CONSTANTS.REGEXPS.GANG, (ctx) => {
+    LOGGER.info("Someone has started gang talk");
+
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.GANG.length - 1);
+    return ctx.reply(QUOTES.GENERAL.GANG[randomQuote]);
+});
+
+bot.hashtag(CONSTANTS.HASHTAGS.MEMORIZE, (ctx) => {
+    LOGGER.info("hashtag from [%d] with id [%s] and body",
+        ctx.message.from.id,
+        ctx.message.text.substring(ctx.message.entities[0].offset, ctx.message.entities[0].length),
+        ctx.message.text.substring(ctx.message.entities[0].offset + ctx.message.entities[0].length));
+
+    return ctx.reply("запомнил Ваше сообщение");
+});
+
 bot.on("text", (ctx) => {
     LOGGER.info("message from [%d] and body", ctx.message.from.id, ctx.message);
 
@@ -166,10 +217,10 @@ bot.on("text", (ctx) => {
 
     // no quotes are selected for mood behavior yet
     if (currentMood === "ANY" || QUOTES.MOODS[currentMood].length === 0) {
-        let randomPart = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING.length - 1);
-        let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.COMMON.DEFECTIVE_HEALING[randomPart].length - 1);
+        let randomPart = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DEFECTIVE_HEALING.length - 1);
+        let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart].length - 1);
 
-        return ctx.reply(QUOTES.COMMON.DEFECTIVE_HEALING[randomPart][randomQuote]);
+        return ctx.reply(QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart][randomQuote]);
     }
 
     let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.MOODS[currentMood].length - 1);
@@ -185,7 +236,7 @@ bot.on("sticker", (ctx) => {
                 ctx.message.from.id,
                 ctx.message.sticker.file_id,
                 ctx.message);
-    if (UTIL.randomIntFromInterval(0, 5) === 1) {
+    if (UTIL.randomIntFromInterval(0, 3) === 1) {
         ctx.replyWithSticker(CONSTANTS.STICKER_IDS.EXTINGUISHER);
     }
 });
@@ -194,11 +245,6 @@ bot.on("video", ctx => console.log(ctx.message));
 
 bot.mention('SvyatoslavVictorovichBot', (ctx) => {
     console.log(111);
-});
-
-bot.hashtag('hashtag', (ctx) => {
-    console.log(ctx.message);
-    return ctx.reply(`${ctx.message.from.username}: ${score}`)
 });
 
 bot.catch((err) => {
