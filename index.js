@@ -220,7 +220,8 @@ bot.on("text", (ctx) => {
         let randomPart = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DEFECTIVE_HEALING.length - 1);
         let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart].length - 1);
 
-        return ctx.reply(QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart][randomQuote]);
+        return ctx.reply(QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart][randomQuote]
+                         .concat(QUOTES.GENERAL.RANDOM[QUOTES.GENERAL.RANDOM.length - 1]));
     }
 
     let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.MOODS[currentMood].length - 1);
