@@ -17,7 +17,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
 
 let silenceForAmountOfMessages = 3;
-let amountOfMessages = UTIL.randomIntFromInterval(0,silenceForAmountOfMessages);
+let amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
 let currentMessage = 0;
 let currentMood = "ANY";
 
@@ -83,10 +83,13 @@ bot.command("/skip", (ctx) => {
             "например так '/skip 4'");
     }
 
-    let amountOfMessages = Number(matchedSkipMessages[1]);
+    silenceForAmountOfMessages = Number(matchedSkipMessages[1]);
+    amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
+    currentMessage = 0;
+
     let textEnding = "сообщений";
 
-    switch (amountOfMessages) {
+    switch (silenceForAmountOfMessages) {
         case 1:
             textEnding = "сообщение";
             break;
@@ -104,9 +107,7 @@ bot.command("/skip", (ctx) => {
             break;
     }
 
-    silenceForAmountOfMessages = amountOfMessages;
-
-    return ctx.reply(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать ${amountOfMessages} ${textEnding}.`);
+    return ctx.reply(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать ${silenceForAmountOfMessages} ${textEnding}.`);
 });
 
 bot.command("/help", (ctx) => ctx.reply(QUOTES.COMMANDS.HELP));
@@ -208,11 +209,7 @@ bot.on("text", (ctx) => {
         return currentMessage++;
     }
 
-    amountOfMessages = UTIL.randomIntFromInterval(
-        silenceForAmountOfMessages > 3
-            ? silenceForAmountOfMessages - 3
-            : 0,
-        silenceForAmountOfMessages);
+    amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
     currentMessage = 0;
 
     // no quotes are selected for mood behavior yet

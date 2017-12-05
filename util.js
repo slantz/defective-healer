@@ -94,10 +94,19 @@ function getCurrentMoodDescription(currentMood) {
     return description;
 }
 
+function silenceForAmountOfMessages(silenceForAmountOfMessages) {
+    return randomIntFromInterval(
+        silenceForAmountOfMessages > 3
+            ? silenceForAmountOfMessages - 3
+            : 0,
+        silenceForAmountOfMessages);
+}
+
 module.exports = {
     convertPeopleToTroll,
     getFullUncutQuotes,
     randomIntFromInterval,
+    silenceForAmountOfMessages,
     getSkipMessagesMatch,
     getMood,
     getCurrentMoodDescription
