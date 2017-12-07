@@ -110,6 +110,14 @@ bot.command("/skip", (ctx) => {
     return ctx.reply(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать ${silenceForAmountOfMessages} ${textEnding}.`);
 });
 
+bot.command("/popustitsya", (ctx) => {
+    silenceForAmountOfMessages = 20;
+    amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
+    currentMessage = 0;
+
+    return ctx.reply(`Ну ты опущенка, теперь мне надо попуститься до ${silenceForAmountOfMessages} сообщений.`);
+});
+
 bot.command("/help", (ctx) => ctx.reply(QUOTES.COMMANDS.HELP));
 
 bot.command("/setmood", (ctx) => {
