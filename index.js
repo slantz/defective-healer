@@ -110,7 +110,7 @@ bot.command("/skip", (ctx) => {
     return ctx.reply(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать ${silenceForAmountOfMessages} ${textEnding}.`);
 });
 
-bot.command("/popustitsya", (ctx) => {
+bot.command("/take_it_easy", (ctx) => {
     silenceForAmountOfMessages = 20;
     amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
     currentMessage = 0;

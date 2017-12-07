@@ -1,7 +1,7 @@
 {
     "COMMANDS": {
         "START": "ты почему сюда звонишь? я разрешал тебе сюда звонить?",
-        "HELP": "/skip `X` - помолчать о жизни `Х` сообщений\t\n\n/help - инфа про команды\t\n\n/popustitsya - попуститься на 20 сообщений\t\n\n/setmood any              - вездесущий\t\n/setmood happy          - счастливый\t\n/setmood angry           - злой\t\n/setmood benevolent  - великодушный\t\n/setmood pensive        - задумчивый\t\n/setmood excited         - возбуждённый\t\n/setmood rude              - грубый\t\n/setmood polite            - вежливый\t\n/setmood funny            - весёлый"
+        "HELP": "/skip `X` - помолчать о жизни `Х` сообщений\t\n\n/help - инфа про команды\t\n\n/take_it_easy - попуститься на 20 сообщений\t\n\n/setmood any              - вездесущий\t\n/setmood happy          - счастливый\t\n/setmood angry           - злой\t\n/setmood benevolent  - великодушный\t\n/setmood pensive        - задумчивый\t\n/setmood excited         - возбуждённый\t\n/setmood rude              - грубый\t\n/setmood polite            - вежливый\t\n/setmood funny            - весёлый"
     },
     "GENERAL": {
         "GREET": {
