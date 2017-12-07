@@ -187,6 +187,13 @@ bot.hears(CONSTANTS.REGEXPS.SINGING, (ctx) => {
     return ctx.reply(QUOTES.GENERAL.SINGING[randomQuote]);
 });
 
+bot.hears(CONSTANTS.REGEXPS.VASYA, (ctx) => {
+    LOGGER.info("Someone wants to hear poem about Vasya");
+
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.VASYA.length - 1);
+    return ctx.reply(QUOTES.GENERAL.VASYA[randomQuote]);
+});
+
 bot.hears(CONSTANTS.REGEXPS.TEA_TIME, (ctx) => {
     LOGGER.info("Someone wants to have a break");
 
