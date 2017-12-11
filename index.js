@@ -15,6 +15,7 @@ const QUOTES = UTIL.getFullUncutQuotes("quotes.json");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
+const ADMINS = UTIL.convertPeopleToTroll(process.env.ADMINS);
 
 let silenceForAmountOfMessages = 3;
 let amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
@@ -56,6 +57,9 @@ bot.context.db = {
         let randomQuote = UTIL.randomIntFromInterval(0, greetQuotes.length - 1);
 
         return QUOTES.GENERAL.GREET[greetQuotes[randomQuote]];
+    },
+    isAdmin: (id) => {
+        return ADMINS[id] !== null;
     }
 };
 
@@ -77,10 +81,10 @@ bot.command("/skip", (ctx) => {
     let matchedSkipMessages = UTIL.getSkipMessagesMatch(ctx.message.text);
 
     if (matchedSkipMessages === null) {
-        return ctx.reply(
+        return ctx.replyWithMarkdown(
             "Набирай-ка ты правильно количество сообщений, " +
-            "сколько от 0 до 9 пропускать, " +
-            "например так '/skip 4'");
+            "сколько от _0_ до _9_ пропускать, " +
+            "например так `/skip 4`");
     }
 
     silenceForAmountOfMessages = Number(matchedSkipMessages[1]);
@@ -107,7 +111,7 @@ bot.command("/skip", (ctx) => {
             break;
     }
 
-    return ctx.reply(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать ${silenceForAmountOfMessages} ${textEnding}.`);
+    return ctx.replyWithMarkdown(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать \`${silenceForAmountOfMessages} ${textEnding}.\``);
 });
 
 bot.command("/take_it_easy", (ctx) => {
@@ -124,11 +128,12 @@ bot.command("/setmood", (ctx) => {
     let matchedMessages = UTIL.getMood(ctx.message.text);
 
     if (matchedMessages === null) {
-        return ctx.reply(
+        return ctx.replyWithMarkdown(
             "Ну, ты, походу, проверяешь меня, хер тебе, " +
-            UTIL.getCurrentMoodDescription(currentMood) +
+            "`" + UTIL.getCurrentMoodDescription(currentMood) + "`" +
             ", " +
             "если хочешь пообщаться, звони мне с:\t\n" +
+            "```\n"+
             "/setmood any         вездесущий\t\n" +
             "/setmood happy       счастливый\t\n" +
             "/setmood angry       злой\t\n" +
@@ -137,7 +142,9 @@ bot.command("/setmood", (ctx) => {
             "/setmood excited     возбуждённый\t\n" +
             "/setmood rude        грубый\t\n" +
             "/setmood polite      вежливый\t\n" +
-            "/setmood funny       весёлый");
+            "/setmood funny       весёлый\t\n" +
+            "```");
+
     }
 
     let newMood = matchedMessages[1];
@@ -146,6 +153,14 @@ bot.command("/setmood", (ctx) => {
 
     return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(currentMood)}, всё пока, не звони сюда больше.`);
 });
+
+// bot.command("/stop", (ctx) => {
+//     if (ctx.db.isAdmin(ctx.from.id)) {
+//         return bot.stop(() => {
+//             LOGGER.warn("stoped by user id [%d]", ctx.from.id);
+//         });
+//     }
+// });
 
 bot.hears(CONSTANTS.REGEXPS.HI, (ctx) => {
     LOGGER.info("Somebody has greeted Slavik");
@@ -165,7 +180,7 @@ bot.hears(CONSTANTS.REGEXPS.APPEAL,
         const appealReply = ctx.db.getAppeal(ctx.message.from.id);
 
         if (appealReply) {
-            return ctx.reply(`${ctx.message.from.first_name}, ${appealReply}`);
+            return ctx.replyWithMarkdown(`[${ctx.message.from.first_name}](tg://user?id=${ctx.message.from.id}), ${appealReply}`);
         }
 });
 
