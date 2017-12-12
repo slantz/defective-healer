@@ -10,25 +10,35 @@ const LOGGER = require(join(__dirname, "logger")).logger;
 const UTIL = require(join(__dirname, "util"));
 const CONSTANTS = require(join(__dirname, "constants"));
 
-const QUOTES = UTIL.getFullUncutQuotes("quotes.json");
+const QUOTES = UTIL.getFullUncutQuotes(CONSTANTS.FILES.QUOTES);
+
+const SESSIONS = UTIL.getSessions(LOGGER);
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
 const ADMINS = UTIL.convertPeopleToTroll(process.env.ADMINS);
 
-// let silenceForAmountOfMessages = 3;
-// let amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
-// let currentMessage = 0;
-// let currentMood = "ANY";
+let areSessionsChecked = false;
 
 bot.use(session());
 
 bot.use((ctx, next) => {
-    UTIL.startNewSession(ctx);
+    if (!areSessionsChecked && SESSIONS !== null && Object.keys(SESSIONS) !== 0) {
+        ctx.session = SESSIONS;
+        areSessionsChecked = true;
+    }
+
+    return next(ctx);
+});
+
+bot.use((ctx, next) => {
+    if (UTIL.startNewSession(ctx)) {
+        UTIL.storeSessions(ctx.session, LOGGER);
+    }
 
     if (UTIL.isSessionStarted(ctx)) {
-        return next()
+        return next(ctx);
     }
 
     return null;
@@ -97,9 +107,10 @@ bot.command("/skip", (ctx) => {
             "например так `/skip 4`");
     }
 
-    UTIL.setSilenceForAmountOfMessages(ctx, Number(matchedSkipMessages[1]));
-    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)));
-    UTIL.setCurrentMessage(ctx, 0);
+    UTIL.setSilenceForAmountOfMessages(ctx, Number(matchedSkipMessages[1]), LOGGER);
+    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)), LOGGER);
+    UTIL.setCurrentMessage(ctx, 0, LOGGER);
+    UTIL.updateSessions(ctx, LOGGER);
 
     let textEnding = "сообщений";
 
@@ -125,9 +136,10 @@ bot.command("/skip", (ctx) => {
 });
 
 bot.command("/take_it_easy", (ctx) => {
-    UTIL.setSilenceForAmountOfMessages(ctx, 20);
-    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)));
-    UTIL.setCurrentMessage(ctx, 0);
+    UTIL.setSilenceForAmountOfMessages(ctx, 20, LOGGER);
+    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)), LOGGER);
+    UTIL.setCurrentMessage(ctx, 0, LOGGER);
+    UTIL.updateSessions(ctx, LOGGER);
 
     return ctx.reply(`Ну ты опущенка, теперь мне надо попуститься до ${UTIL.getSilenceForAmountOfMessages(ctx)} сообщений.`);
 });
@@ -159,7 +171,8 @@ bot.command("/setmood", (ctx) => {
 
     let newMood = matchedMessages[1];
 
-    UTIL.setCurrentMood(ctx, newMood.toUpperCase());
+    UTIL.setCurrentMood(ctx, newMood.toUpperCase(), LOGGER);
+    UTIL.updateSessions(ctx, LOGGER);
 
     return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(UTIL.getCurrentMood(ctx))}, всё пока, не звони сюда больше.`);
 });
@@ -249,11 +262,12 @@ bot.on("text", (ctx) => {
     let amountOfMessages = UTIL.getAmountOfMessages(ctx);
 
     if (currentMessage < amountOfMessages) {
-        return UTIL.setCurrentMessage(ctx, currentMessage + 1);
+        return UTIL.setCurrentMessage(ctx, currentMessage + 1, LOGGER);
     }
 
-    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)));
-    UTIL.setCurrentMessage(ctx, 0);
+    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)), LOGGER);
+    UTIL.setCurrentMessage(ctx, 0, LOGGER);
+    UTIL.updateSessions(ctx, LOGGER);
 
     // no quotes are selected for mood behavior yet
     if (UTIL.getCurrentMood(ctx) === "ANY" || QUOTES.MOODS[UTIL.getCurrentMood(ctx)].length === 0) {

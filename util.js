@@ -3,6 +3,8 @@
 const fs = require("fs");
 const join = require("path").join;
 
+const CONSTANTS = require(join(__dirname, "constants"));
+
 function convertPeopleToTroll(PEOPLE_TO_TROLL) {
     function getMatchedPerson(next) {
         return next.match(/(\d+)\[(\w+)\]/i);
@@ -106,12 +108,42 @@ function isBotStartCommand(message) {
     return message.entities && message.text.includes("/start");
 }
 
+function storeSessions(sessions, logger) {
+    if (sessions !== null && Object.keys(sessions).length !== 0) {
+        fs.writeFile(join(__dirname, CONSTANTS.FILES.SESSIONS), JSON.stringify(sessions), "utf8", (err) => {
+            if (err) {
+                logger.error(`Error occured [${CONSTANTS.CODES.ERRORS.SESSIONS_WRITE_ERROR}]:`, err);
+            }
+            else {
+                logger.warn(`WARNING: [${CONSTANTS.CODES.SUCCESS.SESSIONS_WRITE_SUCCESS}]: sessions has been stored.`, sessions);
+            }
+        });
+    }
+}
+
+function getSessions(logger) {
+    try {
+        return Object.assign({}, JSON.parse(fs.readFileSync(join(__dirname, CONSTANTS.FILES.SESSIONS))));
+    }
+    catch (e) {
+        logger.error(`Error occured [${CONSTANTS.CODES.ERRORS.NO_SESSIONS_FILE_EXIST}], creating new ${join(__dirname, CONSTANTS.FILES.SESSIONS)}: `, e);
+        try {
+            fs.appendFileSync(join(__dirname, CONSTANTS.FILES.SESSIONS), "", {flags: "w+"});
+        }
+        catch (ee) {
+            logger.error(`Error occured [${CONSTANTS.CODES.ERRORS.CREATE_NEW_FILE_FAILED}]`, ee);
+        }
+        return Object.assign({});
+    }
+}
+
 function startNewSession(ctx) {
     if (!isBotStartCommand(ctx.update.message)) {
-        return;
+        return false;
     }
 
     ctx.session[ctx.update.message.chat.id] = {
+        created_at: ctx.update.message.date,
         updated_at: ctx.update.message.date,
         chat: {
             id: ctx.update.message.chat.id,
@@ -128,9 +160,16 @@ function startNewSession(ctx) {
             silenceForAmountOfMessages: 3
         }
     };
+
+    return true;
 }
 
-function setCurrentMood(ctx, currentMood) {
+function updateSessions(ctx, logger) {
+    ctx.session[ctx.update.message.chat.id].updated_at = (new Date()).getTime();
+    storeSessions(ctx.session, logger);
+}
+
+function setCurrentMood(ctx, currentMood, logger) {
     ctx.session[ctx.update.message.chat.id].settings.currentMood = currentMood;
 }
 
@@ -138,7 +177,7 @@ function getCurrentMood(ctx) {
     return ctx.session[ctx.update.message.chat.id].settings.currentMood;
 }
 
-function setCurrentMessage(ctx, currentMessage) {
+function setCurrentMessage(ctx, currentMessage, logger) {
     ctx.session[ctx.update.message.chat.id].settings.currentMessage = currentMessage;
 }
 
@@ -146,7 +185,7 @@ function getCurrentMessage(ctx) {
     return ctx.session[ctx.update.message.chat.id].settings.currentMessage;
 }
 
-function setAmountOfMessages(ctx, amountOfMessages) {
+function setAmountOfMessages(ctx, amountOfMessages, logger) {
     ctx.session[ctx.update.message.chat.id].settings.amountOfMessages = amountOfMessages;
 }
 
@@ -154,7 +193,7 @@ function getAmountOfMessages(ctx) {
     return ctx.session[ctx.update.message.chat.id].settings.amountOfMessages;
 }
 
-function setSilenceForAmountOfMessages(ctx, silenceForAmountOfMessages) {
+function setSilenceForAmountOfMessages(ctx, silenceForAmountOfMessages, logger) {
     ctx.session[ctx.update.message.chat.id].settings.silenceForAmountOfMessages = silenceForAmountOfMessages;
 }
 
@@ -174,7 +213,10 @@ module.exports = {
     getSkipMessagesMatch,
     getMood,
     getCurrentMoodDescription,
+    getSessions,
+    storeSessions,
     startNewSession,
+    updateSessions,
     isSessionStarted,
     setCurrentMood,
     getCurrentMood,

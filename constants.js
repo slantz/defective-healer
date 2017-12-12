@@ -56,11 +56,29 @@ const HASHTAGS = {
     MEMORIZE: 'славик_запиши'
 };
 
+const FILES = {
+    QUOTES: "quotes.json",
+    SESSIONS: "sessions.json"
+};
+
+const CODES = {
+    ERRORS: {
+        SESSIONS_WRITE_ERROR: "SESSIONS_WRITE_ERROR",
+        NO_SESSIONS_FILE_EXIST: "NO_SESSIONS_FILE_EXIST",
+        CREATE_NEW_FILE_FAILED: "CREATE_NEW_FILE_FAILED"
+    },
+    SUCCESS: {
+        SESSIONS_WRITE_SUCCESS: "SESSIONS_WRITE_SUCCESS"
+    }
+};
+
 module.exports = {
     SLAVIK_COORDS,
     BOT_EVENTS,
     MESSAGE_TYPES,
     REGEXPS,
     STICKER_IDS,
-    HASHTAGS
+    HASHTAGS,
+    FILES,
+    CODES
 };
