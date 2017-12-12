@@ -17,12 +17,22 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
 const ADMINS = UTIL.convertPeopleToTroll(process.env.ADMINS);
 
-let silenceForAmountOfMessages = 3;
-let amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
-let currentMessage = 0;
-let currentMood = "ANY";
+// let silenceForAmountOfMessages = 3;
+// let amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
+// let currentMessage = 0;
+// let currentMood = "ANY";
 
 bot.use(session());
+
+bot.use((ctx, next) => {
+    UTIL.startNewSession(ctx);
+
+    if (UTIL.isSessionStarted(ctx)) {
+        return next()
+    }
+
+    return null;
+});
 
 bot.startPolling();
 
@@ -87,13 +97,13 @@ bot.command("/skip", (ctx) => {
             "например так `/skip 4`");
     }
 
-    silenceForAmountOfMessages = Number(matchedSkipMessages[1]);
-    amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
-    currentMessage = 0;
+    UTIL.setSilenceForAmountOfMessages(ctx, Number(matchedSkipMessages[1]));
+    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)));
+    UTIL.setCurrentMessage(ctx, 0);
 
     let textEnding = "сообщений";
 
-    switch (silenceForAmountOfMessages) {
+    switch (UTIL.getSilenceForAmountOfMessages(ctx)) {
         case 1:
             textEnding = "сообщение";
             break;
@@ -111,15 +121,15 @@ bot.command("/skip", (ctx) => {
             break;
     }
 
-    return ctx.replyWithMarkdown(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать \`${silenceForAmountOfMessages} ${textEnding}.\``);
+    return ctx.replyWithMarkdown(`Слушай-ка, ты, дэбильный, теперь мне прийдётся молчать \`${UTIL.getSilenceForAmountOfMessages(ctx)} ${textEnding}.\``);
 });
 
 bot.command("/take_it_easy", (ctx) => {
-    silenceForAmountOfMessages = 20;
-    amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
-    currentMessage = 0;
+    UTIL.setSilenceForAmountOfMessages(ctx, 20);
+    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)));
+    UTIL.setCurrentMessage(ctx, 0);
 
-    return ctx.reply(`Ну ты опущенка, теперь мне надо попуститься до ${silenceForAmountOfMessages} сообщений.`);
+    return ctx.reply(`Ну ты опущенка, теперь мне надо попуститься до ${UTIL.getSilenceForAmountOfMessages(ctx)} сообщений.`);
 });
 
 bot.command("/help", (ctx) => ctx.reply(QUOTES.COMMANDS.HELP));
@@ -130,7 +140,7 @@ bot.command("/setmood", (ctx) => {
     if (matchedMessages === null) {
         return ctx.replyWithMarkdown(
             "Ну, ты, походу, проверяешь меня, хер тебе, " +
-            "`" + UTIL.getCurrentMoodDescription(currentMood) + "`" +
+            "`" + UTIL.getCurrentMoodDescription(UTIL.getCurrentMood(ctx)) + "`" +
             ", " +
             "если хочешь пообщаться, звони мне с:\t\n" +
             "```\n"+
@@ -149,9 +159,9 @@ bot.command("/setmood", (ctx) => {
 
     let newMood = matchedMessages[1];
 
-    currentMood = newMood.toUpperCase();
+    UTIL.setCurrentMood(ctx, newMood.toUpperCase());
 
-    return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(currentMood)}, всё пока, не звони сюда больше.`);
+    return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(UTIL.getCurrentMood(ctx))}, всё пока, не звони сюда больше.`);
 });
 
 // bot.command("/stop", (ctx) => {
@@ -235,15 +245,18 @@ bot.hashtag(CONSTANTS.HASHTAGS.MEMORIZE, (ctx) => {
 bot.on("text", (ctx) => {
     LOGGER.info("message from [%d] and body", ctx.message.from.id, ctx.message);
 
+    let currentMessage = UTIL.getCurrentMessage(ctx);
+    let amountOfMessages = UTIL.getAmountOfMessages(ctx);
+
     if (currentMessage < amountOfMessages) {
-        return currentMessage++;
+        return UTIL.setCurrentMessage(ctx, currentMessage + 1);
     }
 
-    amountOfMessages = UTIL.silenceForAmountOfMessages(silenceForAmountOfMessages);
-    currentMessage = 0;
+    UTIL.setAmountOfMessages(ctx, UTIL.silenceForAmountOfMessages(UTIL.getSilenceForAmountOfMessages(ctx)));
+    UTIL.setCurrentMessage(ctx, 0);
 
     // no quotes are selected for mood behavior yet
-    if (currentMood === "ANY" || QUOTES.MOODS[currentMood].length === 0) {
+    if (UTIL.getCurrentMood(ctx) === "ANY" || QUOTES.MOODS[UTIL.getCurrentMood(ctx)].length === 0) {
         let randomPart = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DEFECTIVE_HEALING.length - 1);
         let allQuotes = QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart].concat(QUOTES.GENERAL.RANDOM);
 
@@ -252,8 +265,8 @@ bot.on("text", (ctx) => {
         return ctx.reply(allQuotes[randomQuote]);
     }
 
-    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.MOODS[currentMood].length - 1);
-    return ctx.reply(QUOTES.MOODS[currentMood][randomQuote]);
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.MOODS[UTIL.getCurrentMood(ctx)].length - 1);
+    return ctx.reply(QUOTES.MOODS[UTIL.getCurrentMood(ctx)][randomQuote]);
 });
 
 bot.on("voice", (ctx) => {

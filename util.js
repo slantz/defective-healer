@@ -102,6 +102,70 @@ function silenceForAmountOfMessages(silenceForAmountOfMessages) {
         silenceForAmountOfMessages);
 }
 
+function isBotStartCommand(message) {
+    return message.entities && message.text.includes("/start");
+}
+
+function startNewSession(ctx) {
+    if (!isBotStartCommand(ctx.update.message)) {
+        return;
+    }
+
+    ctx.session[ctx.update.message.chat.id] = {
+        updated_at: ctx.update.message.date,
+        chat: {
+            id: ctx.update.message.chat.id,
+            type: ctx.update.message.chat.type,
+            first_name: ctx.update.message.chat.first_name,
+            last_name: ctx.update.message.chat.last_name,
+            username: ctx.update.message.chat.username,
+            title: ctx.update.message.chat.title
+        },
+        settings: {
+            currentMood: "ANY",
+            currentMessage: 0,
+            amountOfMessages: silenceForAmountOfMessages(3),
+            silenceForAmountOfMessages: 3
+        }
+    };
+}
+
+function setCurrentMood(ctx, currentMood) {
+    ctx.session[ctx.update.message.chat.id].settings.currentMood = currentMood;
+}
+
+function getCurrentMood(ctx) {
+    return ctx.session[ctx.update.message.chat.id].settings.currentMood;
+}
+
+function setCurrentMessage(ctx, currentMessage) {
+    ctx.session[ctx.update.message.chat.id].settings.currentMessage = currentMessage;
+}
+
+function getCurrentMessage(ctx) {
+    return ctx.session[ctx.update.message.chat.id].settings.currentMessage;
+}
+
+function setAmountOfMessages(ctx, amountOfMessages) {
+    ctx.session[ctx.update.message.chat.id].settings.amountOfMessages = amountOfMessages;
+}
+
+function getAmountOfMessages(ctx) {
+    return ctx.session[ctx.update.message.chat.id].settings.amountOfMessages;
+}
+
+function setSilenceForAmountOfMessages(ctx, silenceForAmountOfMessages) {
+    ctx.session[ctx.update.message.chat.id].settings.silenceForAmountOfMessages = silenceForAmountOfMessages;
+}
+
+function getSilenceForAmountOfMessages(ctx) {
+    return ctx.session[ctx.update.message.chat.id].settings.silenceForAmountOfMessages;
+}
+
+function isSessionStarted(ctx) {
+    return !!ctx.session[ctx.update.message.chat.id];
+}
+
 module.exports = {
     convertPeopleToTroll,
     getFullUncutQuotes,
@@ -109,5 +173,15 @@ module.exports = {
     silenceForAmountOfMessages,
     getSkipMessagesMatch,
     getMood,
-    getCurrentMoodDescription
+    getCurrentMoodDescription,
+    startNewSession,
+    isSessionStarted,
+    setCurrentMood,
+    getCurrentMood,
+    setCurrentMessage,
+    getCurrentMessage,
+    setAmountOfMessages,
+    getAmountOfMessages,
+    setSilenceForAmountOfMessages,
+    getSilenceForAmountOfMessages
 };
