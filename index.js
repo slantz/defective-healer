@@ -21,20 +21,18 @@ const ADMINS = UTIL.convertPeopleToTroll(process.env.ADMINS);
 
 let areSessionsChecked = false;
 
-bot.use(session());
+/**
+ * this override is necessary for local custom storing session logic to work,
+ * as of now session is created for each user in every chat separately by default
+ * see `${ctx.from.id}:${ctx.chat.id}`.
+ */
+bot.use(session({
+    getSessionKey: (ctx) => ctx.chat && `${ctx.chat.id}`
+}));
 
 bot.use((ctx, next) => {
-    if (!areSessionsChecked && SESSIONS !== null && Object.keys(SESSIONS) !== 0) {
-        ctx.session = SESSIONS;
-        areSessionsChecked = true;
-    }
-
-    return next(ctx);
-});
-
-bot.use((ctx, next) => {
-    if (UTIL.startNewSession(ctx)) {
-        UTIL.storeSessions(ctx.session, LOGGER);
+    if (UTIL.startNewSession(ctx, SESSIONS)) {
+        UTIL.storeSessions(ctx.session, ctx.update.message.chat.id, LOGGER);
     }
 
     if (UTIL.isSessionStarted(ctx)) {

@@ -108,9 +108,11 @@ function isBotStartCommand(message) {
     return message.entities && message.text.includes("/start");
 }
 
-function storeSessions(sessions, logger) {
+function storeSessions(sessions, id, logger) {
     if (sessions !== null && Object.keys(sessions).length !== 0) {
-        fs.writeFile(join(__dirname, CONSTANTS.FILES.SESSIONS), JSON.stringify(sessions), "utf8", (err) => {
+        let storedSessions = getSessions(logger);
+
+        fs.writeFile(join(__dirname, CONSTANTS.FILES.SESSIONS), JSON.stringify(Object.assign(storedSessions, {[id]: sessions})), "utf8", (err) => {
             if (err) {
                 logger.error(`Error occured [${CONSTANTS.CODES.ERRORS.SESSIONS_WRITE_ERROR}]:`, err);
             }
@@ -137,12 +139,21 @@ function getSessions(logger) {
     }
 }
 
-function startNewSession(ctx) {
+function startNewSession(ctx, storedSessions) {
     if (!isBotStartCommand(ctx.update.message)) {
         return false;
     }
 
-    ctx.session[ctx.update.message.chat.id] = {
+    if (storedSessions !== null && Object.keys(storedSessions) !== 0) {
+        if (storedSessions[ctx.update.message.chat.id]) {
+            ctx.session = storedSessions[ctx.update.message.chat.id];
+            ctx.session.updated_at = new Date().getTime();
+
+            return true;
+        }
+    }
+
+    ctx.session = {
         created_at: ctx.update.message.date,
         updated_at: ctx.update.message.date,
         chat: {
@@ -165,44 +176,44 @@ function startNewSession(ctx) {
 }
 
 function updateSessions(ctx, logger) {
-    ctx.session[ctx.update.message.chat.id].updated_at = (new Date()).getTime();
-    storeSessions(ctx.session, logger);
+    ctx.session.updated_at = (new Date()).getTime();
+    storeSessions(ctx.session, ctx.update.message.chat.id, logger);
 }
 
-function setCurrentMood(ctx, currentMood, logger) {
-    ctx.session[ctx.update.message.chat.id].settings.currentMood = currentMood;
+function setCurrentMood(ctx, currentMood) {
+    ctx.session.settings.currentMood = currentMood;
 }
 
 function getCurrentMood(ctx) {
-    return ctx.session[ctx.update.message.chat.id].settings.currentMood;
+    return ctx.session.settings.currentMood;
 }
 
-function setCurrentMessage(ctx, currentMessage, logger) {
-    ctx.session[ctx.update.message.chat.id].settings.currentMessage = currentMessage;
+function setCurrentMessage(ctx, currentMessage) {
+    ctx.session.settings.currentMessage = currentMessage;
 }
 
 function getCurrentMessage(ctx) {
-    return ctx.session[ctx.update.message.chat.id].settings.currentMessage;
+    return ctx.session.settings.currentMessage;
 }
 
-function setAmountOfMessages(ctx, amountOfMessages, logger) {
-    ctx.session[ctx.update.message.chat.id].settings.amountOfMessages = amountOfMessages;
+function setAmountOfMessages(ctx, amountOfMessages) {
+    ctx.session.settings.amountOfMessages = amountOfMessages;
 }
 
 function getAmountOfMessages(ctx) {
-    return ctx.session[ctx.update.message.chat.id].settings.amountOfMessages;
+    return ctx.session.settings.amountOfMessages;
 }
 
-function setSilenceForAmountOfMessages(ctx, silenceForAmountOfMessages, logger) {
-    ctx.session[ctx.update.message.chat.id].settings.silenceForAmountOfMessages = silenceForAmountOfMessages;
+function setSilenceForAmountOfMessages(ctx, silenceForAmountOfMessages) {
+    ctx.session.settings.silenceForAmountOfMessages = silenceForAmountOfMessages;
 }
 
 function getSilenceForAmountOfMessages(ctx) {
-    return ctx.session[ctx.update.message.chat.id].settings.silenceForAmountOfMessages;
+    return ctx.session.settings.silenceForAmountOfMessages;
 }
 
 function isSessionStarted(ctx) {
-    return !!ctx.session[ctx.update.message.chat.id];
+    return !!Object.keys(ctx.session).length;
 }
 
 module.exports = {
