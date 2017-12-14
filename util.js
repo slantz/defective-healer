@@ -216,6 +216,10 @@ function isSessionStarted(ctx) {
     return !!Object.keys(ctx.session).length;
 }
 
+function getActiveSessions(ctx) {
+
+}
+
 module.exports = {
     convertPeopleToTroll,
     getFullUncutQuotes,
@@ -236,5 +240,6 @@ module.exports = {
     setAmountOfMessages,
     getAmountOfMessages,
     setSilenceForAmountOfMessages,
-    getSilenceForAmountOfMessages
+    getSilenceForAmountOfMessages,
+    getActiveSessions
 };

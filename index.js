@@ -175,6 +175,35 @@ bot.command("/setmood", (ctx) => {
     return ctx.reply(`теперь ${UTIL.getCurrentMoodDescription(UTIL.getCurrentMood(ctx))}, всё пока, не звони сюда больше.`);
 });
 
+bot.command("/stats", (ctx) => {
+    LOGGER.info("this guy [%d] wants to get stats", ctx.message.from.id);
+
+    if (!ctx.db.isAdmin(ctx.message.from.id)) {
+        return;
+    }
+
+    try {
+        let activeSessions = UTIL.getSessions(LOGGER);
+
+        if (activeSessions !== null && Object.keys(activeSessions) !== 0) {
+            return ctx.replyWithMarkdown(`These are the active sessions:\t\n\n[[\n${Object
+                .keys(activeSessions)
+                .map((id, index) => (index !== 0 ? "\n\n" : "") 
+                    + "\t\tid: "  
+                    + activeSessions[id].chat.id + "\t\n\t\ttype: " 
+                    + activeSessions[id].chat.type + "\t\n" 
+                    + (activeSessions[id].chat.type === "private" ? "\t\tfirst_name: " : "")
+                    + (activeSessions[id].chat.type === "private" ? activeSessions[id].chat.first_name : "")
+                    + (activeSessions[id].chat.type === "private" ? "\n\t\tlast_name: " : "\t\tchat title: ")
+                    + (activeSessions[id].chat.type === "private" ? activeSessions[id].chat.last_name : activeSessions[id].chat.title))}\t\n]]
+            `);
+        }
+    }
+    catch (e) {
+        return ctx.reply(`Some unexpected error happened while fetching active sessions: [${e}]`);
+    }
+});
+
 // bot.command("/stop", (ctx) => {
 //     if (ctx.db.isAdmin(ctx.from.id)) {
 //         return bot.stop(() => {
