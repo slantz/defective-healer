@@ -11,5 +11,5 @@ This is the Telegram bot based on telegraf with quotes of Svyatoslav Victorovich
 
 ## Admin commands
 - `/stats`  - open sessions, both private and chat ones,
--- private - shows _id_, _type_, _first_name_, and _last_name_
--- chat - shows _id_, _type_ and _chat_title_
+  - private - shows _id_, _type_, _first_name_, and _last_name_
+  - chat - shows _id_, _type_ and _chat_title_
