@@ -237,7 +237,7 @@ bot.hears(CONSTANTS.REGEXPS.APPEAL,
 bot.hears(CONSTANTS.REGEXPS.RICH_BITCH, (ctx) => {
     LOGGER.info("Someone has started real money talk");
 
-    if (UTIL.randomIntFromInterval(0, 1) === 1) {
+    if (UTIL.randomIntFromInterval(0, 10) === 7) {
         return ctx.replyWithSticker(CONSTANTS.STICKER_IDS.BUSINESS_LESSON);
     }
 
@@ -319,7 +319,7 @@ bot.on("sticker", (ctx) => {
                 ctx.message.from.id,
                 ctx.message.sticker.file_id,
                 ctx.message);
-    if (UTIL.randomIntFromInterval(0, 3) === 1) {
+    if (UTIL.randomIntFromInterval(0, 10) === 1) {
         ctx.replyWithSticker(CONSTANTS.STICKER_IDS.EXTINGUISHER);
     }
 });
