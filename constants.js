@@ -44,7 +44,8 @@ const REGEXPS = {
     SINGING: /петь|певиц|поё(т|м)|песн|по(й|ю)|спел/i,
     TEA_TIME: /чай|к(о|а)ф{1,2}е|пить|чаепити|перекур|перерыв|обед|ланч|ужин|завтрак/i,
     GANG: /банд|шайк|лейк.{1,2}|ушат/i,
-    VASYA: /васили|вас(я|ю|е)/i
+    VASYA: /васили|вас(я|ю|е)/i,
+    ID_FIRST_LAST_NAME_FROM_LOGS: /"from"(\s+)?:(\s+)?\{(\s+)?"id"(\s+)?:(\s+)?([\w\-]+).*"first_name"(\s+)?:(\s+)?"([^"]+)"(.*"last_name"(\s+)?:(\s+)?"([^"]+)")?/i
 };
 
 const STICKER_IDS = {
@@ -58,14 +59,20 @@ const HASHTAGS = {
 
 const FILES = {
     QUOTES: "quotes.json",
-    SESSIONS: "sessions.json"
+    SESSIONS: "sessions.json",
+    LOGS: {
+        ERROR: "logs/dh-error.log",
+        INFO: "logs/dh-info.log",
+        WARN: "logs/dh-warn.log"
+    }
 };
 
 const CODES = {
     ERRORS: {
         SESSIONS_WRITE_ERROR: "SESSIONS_WRITE_ERROR",
         NO_SESSIONS_FILE_EXIST: "NO_SESSIONS_FILE_EXIST",
-        CREATE_NEW_FILE_FAILED: "CREATE_NEW_FILE_FAILED"
+        CREATE_NEW_FILE_FAILED: "CREATE_NEW_FILE_FAILED",
+        READ_FILE_FAILED: "READ_FILE_FAILED"
     },
     SUCCESS: {
         SESSIONS_WRITE_SUCCESS: "SESSIONS_WRITE_SUCCESS"

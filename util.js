@@ -220,6 +220,27 @@ function getActiveSessions(ctx) {
 
 }
 
+function getIdsFromInfoLogs(logger) {
+    try {
+        let allInfoLogs = fs.readFileSync(join(__dirname, CONSTANTS.FILES.LOGS.INFO), "utf8");
+        let allInfoLogsByLines = allInfoLogs.split(/\r\n|\n/);
+        let idsFromInfoLogs = [];
+
+        allInfoLogsByLines.forEach(function(line){
+            let match = line.match(CONSTANTS.REGEXPS.ID_FIRST_LAST_NAME_FROM_LOGS);
+            if (match !== null) {
+                idsFromInfoLogs.push(`${match[6]}: ${match[9]} - ${match[13]}`);
+            }
+        });
+
+        return idsFromInfoLogs;
+    }
+    catch (e) {
+        logger.error(`Error occured [${CONSTANTS.CODES.ERRORS.READ_FILE_FAILED}], reading from ${join(__dirname, CONSTANTS.FILES.LOGS.INFO)}: `, e);
+        return [];
+    }
+}
+
 module.exports = {
     convertPeopleToTroll,
     getFullUncutQuotes,
@@ -241,5 +262,6 @@ module.exports = {
     getAmountOfMessages,
     setSilenceForAmountOfMessages,
     getSilenceForAmountOfMessages,
-    getActiveSessions
+    getActiveSessions,
+    getIdsFromInfoLogs
 };

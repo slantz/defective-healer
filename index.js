@@ -204,6 +204,30 @@ bot.command("/stats", (ctx) => {
     }
 });
 
+bot.command("/ids_from_info_logs", (ctx) => {
+    LOGGER.info("this guy [%d] wants to ids of all users from info logs", ctx.message.from.id);
+
+    if (!ctx.db.isAdmin(ctx.message.from.id)) {
+        return;
+    }
+
+    try {
+        let idsFromInfoLogs = UTIL.getIdsFromInfoLogs(LOGGER);
+
+        if (idsFromInfoLogs.length !== 0) {
+            return ctx.replyWithMarkdown(`These are ids from info logs:\t\n\n[[\n${idsFromInfoLogs
+                .map((id, index) => (index !== 0 ? "\n\n" : "")
+                    + "\t\tid: "
+                    + id)
+                .filter((item, pos, array) => array.map((mapItem) => mapItem.trim()).indexOf(item.trim()) === pos)}\t\n]]
+            `);
+        }
+    }
+    catch (e) {
+        return ctx.reply(`Some unexpected error happened while fetching ids from info logs: [${e}]`);
+    }
+});
+
 // bot.command("/stop", (ctx) => {
 //     if (ctx.db.isAdmin(ctx.from.id)) {
 //         return bot.stop(() => {
