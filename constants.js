@@ -45,7 +45,7 @@ const REGEXPS = {
     TEA_TIME: /чай|к(о|а)ф{1,2}е|пить|чаепити|перекур|перерыв|обед|ланч|ужин|завтрак/i,
     GANG: /банд|шайк|лейк.{1,2}|ушат/i,
     VASYA: /васили|вас(я|ю|е)/i,
-    ID_FIRST_LAST_NAME_FROM_LOGS: /"from"(\s+)?:(\s+)?\{(\s+)?"id"(\s+)?:(\s+)?([\w\-]+).*"first_name"(\s+)?:(\s+)?"([^"]+)"(.*"last_name"(\s+)?:(\s+)?"([^"]+)")?/i
+    ID_FIRST_LAST_NAME_FROM_LOGS: /"from"(\s+)?:(\s+)?\{(\s+)?"id"(\s+)?:(\s+)?([\w\-]+),(\s+)?"is_bot":(\s+)?(true|false),(\s+)?"first_name"(\s+)?:(\s+)?"([^"]+)"(,"last_name"(\s+)?:(\s+)?"([^"]+)")?/i
 };
 
 const STICKER_IDS = {

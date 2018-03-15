@@ -229,7 +229,7 @@ function getIdsFromInfoLogs(logger) {
         allInfoLogsByLines.forEach(function(line){
             let match = line.match(CONSTANTS.REGEXPS.ID_FIRST_LAST_NAME_FROM_LOGS);
             if (match !== null) {
-                idsFromInfoLogs.push(`${match[6]}: ${match[9]} - ${match[13]}`);
+                idsFromInfoLogs.push(`${match[6]}: ${match[13]} - ${match[17]}`);
             }
         });
 

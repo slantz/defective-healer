@@ -211,17 +211,30 @@ bot.command("/ids_from_info_logs", (ctx) => {
         return;
     }
 
-    try {
-        let idsFromInfoLogs = UTIL.getIdsFromInfoLogs(LOGGER);
+    let response = ctx.reply("подожди, дай мне распарсить");
 
-        if (idsFromInfoLogs.length !== 0) {
-            return ctx.replyWithMarkdown(`These are ids from info logs:\t\n\n[[\n${idsFromInfoLogs
-                .map((id, index) => (index !== 0 ? "\n\n" : "")
-                    + "\t\tid: "
-                    + id)
-                .filter((item, pos, array) => array.map((mapItem) => mapItem.trim()).indexOf(item.trim()) === pos)}\t\n]]
-            `);
+    try {
+        let idsFromInfoLogs = UTIL.getIdsFromInfoLogs(LOGGER)
+            .map((id, index) => (index !== 0 ? "\n\n" : "")
+                + "\t\tid: "
+                + id)
+            .filter((item, pos, array) => array.map((mapItem) => mapItem.trim()).indexOf(item.trim()) === pos);
+
+        let idsFromInfoLogsSplits = [];
+
+        for (let i = 0, max = 100; i < max; i=i+100) {
+            idsFromInfoLogsSplits.push(idsFromInfoLogs.slice(i, i+max));
         }
+
+        for (let i = 0; i < idsFromInfoLogsSplits.length; i++) {
+            (function(newi){
+                response.then(() => {
+                    response = ctx.replyWithMarkdown(`These are ids from info logs:\t\n\n[[\n${idsFromInfoLogsSplits[newi]}\t\n]]`);
+                });
+            })(i);
+        }
+
+        return response;
     }
     catch (e) {
         return ctx.reply(`Some unexpected error happened while fetching ids from info logs: [${e}]`);
