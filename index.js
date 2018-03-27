@@ -18,6 +18,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
 const ADMINS = UTIL.convertPeopleToTroll(process.env.ADMINS);
+const SESSIONS_TO_IGNORE = UTIL.convertPeopleToTroll(process.env.SESSIONS_TO_IGNORE);
 
 let areSessionsChecked = false;
 
@@ -274,6 +275,10 @@ bot.hears(CONSTANTS.REGEXPS.APPEAL,
 bot.hears(CONSTANTS.REGEXPS.RICH_BITCH, (ctx) => {
     LOGGER.info("Someone has started real money talk");
 
+    if (UTIL.ignoreSession(ctx.session.chat.id, SESSIONS_TO_IGNORE)) {
+        return;
+    }
+
     if (UTIL.randomIntFromInterval(0, 10) === 7) {
         return ctx.replyWithSticker(CONSTANTS.STICKER_IDS.BUSINESS_LESSON);
     }
@@ -305,6 +310,10 @@ bot.hears(CONSTANTS.REGEXPS.TEA_TIME, (ctx) => {
 
 bot.hears(CONSTANTS.REGEXPS.GANG, (ctx) => {
     LOGGER.info("Someone has started gang talk");
+
+    if (UTIL.ignoreSession(ctx.session.chat.id, SESSIONS_TO_IGNORE)) {
+        return;
+    }
 
     let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.GANG.length - 1);
     return ctx.reply(QUOTES.GENERAL.GANG[randomQuote]);

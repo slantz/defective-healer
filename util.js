@@ -7,7 +7,7 @@ const CONSTANTS = require(join(__dirname, "constants"));
 
 function convertPeopleToTroll(PEOPLE_TO_TROLL) {
     function getMatchedPerson(next) {
-        return next.match(/(\d+)\[(\w+)\]/i);
+        return next.match(/(-?\d+)\[(\w+)\]/i);
     }
 
     function assignPersonToHashMap(prev, next) {
@@ -220,6 +220,10 @@ function getActiveSessions(ctx) {
 
 }
 
+function ignoreSession(session_id, sessions_to_ignore) {
+    return !!sessions_to_ignore[session_id];
+}
+
 function getIdsFromInfoLogs(logger) {
     try {
         let allInfoLogs = fs.readFileSync(join(__dirname, CONSTANTS.FILES.LOGS.INFO), "utf8");
@@ -263,5 +267,6 @@ module.exports = {
     setSilenceForAmountOfMessages,
     getSilenceForAmountOfMessages,
     getActiveSessions,
-    getIdsFromInfoLogs
+    getIdsFromInfoLogs,
+    ignoreSession
 };

@@ -13,3 +13,9 @@ This is the Telegram bot based on telegraf with quotes of Svyatoslav Victorovich
 - `/stats`  - open sessions, both private and chat ones,
   - private - shows _id_, _type_, _first_name_, and _last_name_
   - chat - shows _id_, _type_ and _chat_title_
+  
+## `.env` file variables
+- `BOT_TOKEN` - telegram token of your bot
+- `PEOPLE_TO_TROLL` - list of people to troll with private treat, format: `<id>[<some_random_name>]`
+- `ADMINS` - list of admins who have the right to see hiddne stats of all active sessions and stats from all messages in logs, format: `<id>[<some_random_name>]`
+- `SESSIONS_TO_IGNORE` - list of sessions to ignore some functionality, like regexp mentioning, format: `<id>[<some_random_name>]` 
