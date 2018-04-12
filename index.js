@@ -54,17 +54,22 @@ bot.context.db = {
         }
 
         let appealQuotesForName = QUOTES.USER_SPECIFIC[PEOPLE_TO_TROLL[id].name].TO;
-        let defectiveQuotes = QUOTES.GENERAL.DEFECTIVE_HEALING[QUOTES.GENERAL.DEFECTIVE_HEALING.length - 1];
         let singingQuotes = QUOTES.GENERAL.SINGING[QUOTES.GENERAL.SINGING.length - 1];
 
 
-        let allQuotes;
+        let allQuotes = [];
         switch (PEOPLE_TO_TROLL[id].name) {
             case "al":
                 allQuotes = appealQuotesForName.concat(singingQuotes);
                 break;
             default:
-                allQuotes = appealQuotesForName.concat(defectiveQuotes);
+                allQuotes = [].concat(appealQuotesForName);
+
+                Object.keys(QUOTES.GENERAL.DEFECTIVE_HEALING).forEach(quotesSetKey => {
+                    if (quotesSetKey !== "length") {
+                        allQuotes = allQuotes.concat(QUOTES.GENERAL.DEFECTIVE_HEALING[quotesSetKey]);
+                    }
+                });
         }
 
         let randomQuote = UTIL.randomIntFromInterval(0, allQuotes.length - 1);
