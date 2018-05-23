@@ -340,6 +340,12 @@ bot.hashtag(CONSTANTS.HASHTAGS.MEMORIZE, (ctx) => {
     return ctx.reply("запомнил Ваше сообщение");
 });
 
+bot.hashtag(CONSTANTS.HASHTAGS.REMIND, (ctx) => {
+    console.log(ctx.message);
+    LOGGER.reminder("hastag test azazzaza")
+   return ctx.reply("done");
+});
+
 bot.on("text", (ctx) => {
     LOGGER.info("message from [%d] and body", ctx.message.from.id, ctx.message);
 
