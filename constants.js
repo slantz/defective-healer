@@ -79,6 +79,17 @@ const CODES = {
     }
 };
 
+const TROLL_TIME = {
+    HOURS_RANGE: {
+        MIN: 21,
+        MAX: 23
+    },
+    MINUTES_RANGE: {
+        MIN: 0,
+        MAX: 57
+    }
+};
+
 module.exports = {
     SLAVIK_COORDS,
     BOT_EVENTS,
@@ -87,5 +98,6 @@ module.exports = {
     STICKER_IDS,
     HASHTAGS,
     FILES,
-    CODES
+    CODES,
+    TROLL_TIME
 };
