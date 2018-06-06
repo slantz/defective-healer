@@ -27,11 +27,20 @@ module.exports = function({bot, chatsToTroll, quotes}) {
         bot.telegram.sendMessage(getChatToTroll("tawerna"), randomPartQuotes[randomQuote]);
     }
 
-    const TROLL_MINUTE_START = UTIL.randomIntFromInterval(CONSTANTS.TROLL_TIME.MINUTES_RANGE.MIN, CONSTANTS.TROLL_TIME.MINUTES_RANGE.MAX);
-    const TROLL_MINUTES = `${TROLL_MINUTE_START}-${TROLL_MINUTE_START + 2}`;
-    const TROLL_HOUR = UTIL.randomIntFromInterval(CONSTANTS.TROLL_TIME.HOURS_RANGE.MIN, CONSTANTS.TROLL_TIME.HOURS_RANGE.MAX);
+    let TROLL_MINUTE_START = null;
+    let TROLL_MINUTES = null;
+    let TROLL_HOUR = null;
 
-    schedule.scheduleJob(`*/10 ${TROLL_MINUTES} ${TROLL_HOUR} * * *`, function() {
+    function resetTrollTime() {
+        TROLL_MINUTE_START = UTIL.randomIntFromInterval(CONSTANTS.TROLL_TIME.MINUTES_RANGE.MIN, CONSTANTS.TROLL_TIME.MINUTES_RANGE.MAX);
+        TROLL_MINUTES = `${TROLL_MINUTE_START}-${TROLL_MINUTE_START + 2}`;
+        TROLL_HOUR = UTIL.randomIntFromInterval(CONSTANTS.TROLL_TIME.HOURS_RANGE.MIN, CONSTANTS.TROLL_TIME.HOURS_RANGE.MAX);
+    }
+
+    resetTrollTime();
+
+    schedule.scheduleJob(`*/15 ${TROLL_MINUTES} ${TROLL_HOUR} * * *`, function() {
         lol();
+        resetTrollTime();
     });
 };
