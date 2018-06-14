@@ -1,6 +1,6 @@
 {
   "name": "defective-healer-telegram-bot",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "this is the telegraf telegram bot that answers with quotes of the defective healer",
   "main": "index.js",
   "scripts": {
