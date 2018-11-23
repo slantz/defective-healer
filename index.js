@@ -313,6 +313,13 @@ bot.hears(CONSTANTS.REGEXPS.VASYA, (ctx) => {
     return ctx.reply(QUOTES.GENERAL.VASYA[randomQuote]);
 });
 
+bot.hears(CONSTANTS.REGEXPS.DAWG, (ctx) => {
+    LOGGER.info("Someone wants to understand real dawg life");
+
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DAWG.length - 1);
+    return ctx.reply(QUOTES.GENERAL.DAWG[randomQuote]);
+});
+
 bot.hears(CONSTANTS.REGEXPS.TEA_TIME, (ctx) => {
     LOGGER.info("Someone wants to have a break");
 
