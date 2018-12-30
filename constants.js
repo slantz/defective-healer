@@ -39,12 +39,13 @@ const MESSAGE_TYPES = {
 const REGEXPS = {
     HI: /прив(ет|а\s)|даров|йо\s|в(о|а)сап{1,2}|как\sоно|как\sдел|здравствуйт|кто\sздес|что\sделае(ш|т)/i,
     FIND: /вычислим/i,
-    APPEAL: /(?!славик_запиши)(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв|врач|доктор)/i,
+    APPEAL: /(?!славик_запиши)(славик|слав|святослав|викторович|блинков|пранкер|дефектив|целител|slav|victorov|healer|defective|сяв|врач|доктор|святик)/i,
     RICH_BITCH: /\$|\£|\£|\¥|\€|\₽|\₴|деньг|лав(е|э)|мани|money|dollar|bucks|дол{1,2}ар|евро|гривн|копейк|цент.{1,2}|грн|дело|бизнес/i,
     SINGING: /петь|певиц|поё(т|м)|песн|по(й|ю)|спел/i,
     TEA_TIME: /чай|к(о|а)ф{1,2}е|пить|чаепити|перекур|перерыв|обед|ланч|ужин|завтрак/i,
     GANG: /банд|шайк|лейк.{1,2}|ушат/i,
     VASYA: /васили|вас(я|ю|е)/i,
+    DAWG: /пацан/i,
     ID_FIRST_LAST_NAME_FROM_LOGS: /"from"(\s+)?:(\s+)?\{(\s+)?"id"(\s+)?:(\s+)?([\w\-]+),(\s+)?"is_bot":(\s+)?(true|false),(\s+)?"first_name"(\s+)?:(\s+)?"([^"]+)"(,"last_name"(\s+)?:(\s+)?"([^"]+)")?/i
 };
 
@@ -79,6 +80,17 @@ const CODES = {
     }
 };
 
+const TROLL_TIME = {
+    HOURS_RANGE: {
+        MIN: 21,
+        MAX: 23
+    },
+    MINUTES_RANGE: {
+        MIN: 0,
+        MAX: 57
+    }
+};
+
 module.exports = {
     SLAVIK_COORDS,
     BOT_EVENTS,
@@ -87,5 +99,6 @@ module.exports = {
     STICKER_IDS,
     HASHTAGS,
     FILES,
-    CODES
+    CODES,
+    TROLL_TIME
 };

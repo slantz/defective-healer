@@ -19,6 +19,13 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const PEOPLE_TO_TROLL = UTIL.convertPeopleToTroll(process.env.PEOPLE_TO_TROLL);
 const ADMINS = UTIL.convertPeopleToTroll(process.env.ADMINS);
 const SESSIONS_TO_IGNORE = UTIL.convertPeopleToTroll(process.env.SESSIONS_TO_IGNORE);
+const CHATS_TO_TROLL = UTIL.convertPeopleToTroll(process.env.CHATS_TO_TROLL);
+
+const SCHEDULER = require(join(__dirname, "scheduler"))({
+    bot: bot,
+    chatsToTroll: CHATS_TO_TROLL,
+    quotes: QUOTES
+});
 
 let areSessionsChecked = false;
 
@@ -304,6 +311,13 @@ bot.hears(CONSTANTS.REGEXPS.VASYA, (ctx) => {
 
     let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.VASYA.length - 1);
     return ctx.reply(QUOTES.GENERAL.VASYA[randomQuote]);
+});
+
+bot.hears(CONSTANTS.REGEXPS.DAWG, (ctx) => {
+    LOGGER.info("Someone wants to understand real dawg life");
+
+    let randomQuote = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DAWG.length - 1);
+    return ctx.reply(QUOTES.GENERAL.DAWG[randomQuote]);
 });
 
 bot.hears(CONSTANTS.REGEXPS.TEA_TIME, (ctx) => {
