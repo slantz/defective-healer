@@ -364,7 +364,8 @@ bot.on("text", (ctx) => {
     // no quotes are selected for mood behavior yet
     if (UTIL.getCurrentMood(ctx) === "ANY" || QUOTES.MOODS[UTIL.getCurrentMood(ctx)].length === 0) {
         let randomPart = UTIL.randomIntFromInterval(0, QUOTES.GENERAL.DEFECTIVE_HEALING.length - 1);
-        let allQuotes = QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart].concat(QUOTES.GENERAL.RANDOM);
+        // removed random quotes array, since it's bigger than other sub arrays and probabilit of repeating the quote is huge > 50%
+        let allQuotes = QUOTES.GENERAL.DEFECTIVE_HEALING[randomPart]; //.concat(QUOTES.GENERAL.RANDOM);
 
         let randomQuote = UTIL.randomIntFromInterval(0, allQuotes.length - 1);
 
