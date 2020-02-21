@@ -6,4 +6,4 @@ services:
       context: .
     image: kblnsk/defective-healer-bot
     volumes:
-      - ./logs/mongo/:/logs/defective-healer
+      - ./logs/:/logs/defective-healer
