@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  defective-healer-bot:
+    build:
+      context: .
+    image: kblnsk/defective-healer-bot
+    volumes:
+      - ./logs/:/logs/defective-healer
